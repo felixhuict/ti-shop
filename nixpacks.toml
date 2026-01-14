@@ -1,19 +1,20 @@
 [project]
 name = "ti-shop"
 
-
 [phases.setup]
-nixPkgs = ['python']
+nixPkgs = ["python311", "pip"]
+
+[phases.install]
 commands = [
   "# ensure pip is available and install requirements (best-effort)",
-  "python3 -m pip install --user -r scrapper/requirements.txt || true"
+  "python -m pip install --user -r scrapper/requirements.txt || true"
 ]
 
 [phases.build]
 commands = [
   "# run scraper during build so generated data is available",
-  "python3 scrapper/app.py"
+  "python scrapper/app.py"
 ]
 
 [start]
-command = "python3 -m http.server 8000 --directory webshop"
+command = "python -m http.server 8000 --directory webshop"
