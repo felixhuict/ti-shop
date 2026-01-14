@@ -1,3 +1,5 @@
 venv
 node_modules
-downloaded_pages
+scrapped_data
+webshop/data 
+webshop/data.json

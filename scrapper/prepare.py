@@ -1,6 +1,7 @@
 import os
 import re
 import json
+import shutil
 from bs4 import BeautifulSoup
 
 def extract_product_data_from_html(file_path):
@@ -87,7 +88,7 @@ def extract_product_data_from_html(file_path):
         "extra_images": extra_images
     }
 
-def scrape_downloaded_pages(folder_path="downloaded_pages"):
+def scrape_downloaded_pages(folder_path="scrapped_data"):
     data = []
     for filename in os.listdir(folder_path):
         if filename.lower().endswith(".html"):
@@ -98,13 +99,46 @@ def scrape_downloaded_pages(folder_path="downloaded_pages"):
     return data
 
 def main():
-    output_file = "data.json"
-    extracted_data = scrape_downloaded_pages("downloaded_pages")
+    extracted_data = scrape_downloaded_pages("scrapped_data")
+
+    out_dir = os.path.join("../","webshop", "data")
+    os.makedirs(out_dir, exist_ok=True)
+    output_file = os.path.join("../","webshop", "data.json")
 
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(extracted_data, f, indent=4, ensure_ascii=False)
 
     print(f"✅ {len(extracted_data)} items written to {output_file}")
+    # Copy resource files (images, pdfs) from downloaded pages into the data folder
+    exts = {'.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp', '.pdf'}
+    src_dirs = ["scrapped_data"]
+    seen_names = set()
+    for src in src_dirs:
+        if not os.path.isdir(src):
+            continue
+        for root, _, files in os.walk(src):
+            for fname in files:
+                _, ext = os.path.splitext(fname)
+                if ext.lower() in exts:
+                    src_path = os.path.join(root, fname)
+                    dest_name = fname
+                    # avoid overwriting files with same name
+                    if dest_name in seen_names:
+                        base, extension = os.path.splitext(fname)
+                        i = 1
+                        while True:
+                            candidate = f"{base}_{i}{extension}"
+                            if candidate not in seen_names:
+                                dest_name = candidate
+                                break
+                            i += 1
+                    dest_path = os.path.join(out_dir, dest_name)
+                    try:
+                        shutil.copy2(src_path, dest_path)
+                        seen_names.add(dest_name)
+                    except Exception as e:
+                        print(f"[-] Failed to copy {src_path} -> {dest_path}: {e}")
+    print(f"✅ Copied resources into {out_dir}")
 
 if __name__ == "__main__":
     main()

@@ -1,0 +1,17 @@
+[project]
+name = "ti-shop"
+
+[phases.setup]
+commands = [
+  "# ensure pip is available and install requirements (best-effort)",
+  "python3 -m pip install --user -r scrapper/requirements.txt || true"
+]
+
+[phases.build]
+commands = [
+  "# run scraper during build so generated data is available",
+  "python3 scrapper/app.py"
+]
+
+[start]
+command = "python3 -m http.server 8000 --directory webshop"
