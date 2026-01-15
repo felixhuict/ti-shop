@@ -8,7 +8,7 @@ Dit is een verbeterde versie van de actuele [Technische Informatica Shop](https:
 ### Scrapper
 Zoals de naam het al zegt scrapped deze module de [turing-lab/ti-lab-shop](https://hu-hbo-ict.gitlab.io/turing-lab/ti-lab-shop/) website voor informatie. En je kunt zelfs deze informatie overzetten naar een `data.json` waarin alle informatie van de producten in beschrijft staat. 
 
-> [Lees meer...](./scapper/README.md)
+> [Lees meer...](./scrapper/README.md)
 
 ### Webshop
 De vernieuwde webshop kun je vinden on de folder `webshop`, binnen de folder vindt je de source code voor de website. 
